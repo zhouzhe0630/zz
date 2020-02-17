@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-ccc"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.invitation.dao.InvitationMapper">
+    <select id="getList" resultType="Invitation">
+        select * from invitation
+        where 1=1
+        <if test="title!=null">
+            and title like concat("%",#{title},"%")
+        </if>
+        order by createDate DESC
+        limit #{from},#{pageSize}
+    </select>
+
+    <select id="count" resultType="int">
+        select count(1) from invitation
+        where 1=1
+        <if test="title!=null">
+            and title like concat("%",#{title},"%")
+        </if>
+    </select>
+
+    <select id="showReply" resultType="Reply">
+       SELECT * FROM `reply_detail` r  WHERE r.`invid`=#{id}
+       limit #{from},#{pageSize}
+    </select>
+
+    <select id="countReply" resultType="int">
+       SELECT COUNT(1) FROM `reply_detail` r  WHERE invid=#{id}
+    </select>
+
+    <insert id="add">
+      INSERT INTO `invitation`.`reply_detail` (
+  `invid`,
+  `content`,
+  `author`,
+  `createDate`
+)
+VALUES
+  (
+    #{invid},
+    #{content},
+    #{author},
+    #{createDate}
+  ) ;
+
+
+    </insert>
+
+    <delete id="dele">
+        DELETE
+FROM
+  `invitation`
+WHERE `id` = #{0}
+    </delete>
+
+    <delete id="deleRe">
+DELETE
+FROM
+  `reply_detail`
+WHERE `invid` = #{0}
+    </delete>
+</mapper>
